@@ -29,10 +29,17 @@ public class TimeNode{
 		//Recursively reformatting the TimeCell and fixing each levels of the binary tree.
 		//The end result should be for example: 09:00AM-05:00PM
 		if(this.key.equals(",")) {
+		//Example: 7-9,1-3 -> left.toString = "7-9" right.toString = "1-3" key = ","
 			this.left.reformatData();
 			this.right.reformatData();
 		}
 		if((this.key.equals("-"))) {
+		//This scope first checks for the period of the day by finding AM or PM in the given string such as "7am"
+		//The code then sets the two booleans dealing with the periods accordingly:
+		//isPeriod checks if there's an AM/PM and isAM checks if there's an AM (there cannot be both an AM and PM in the same string
+		//The code then checks for a colon(":") and if there is no colon, the code creates a colon and fixes the tree accordingly
+		//Example 1: 7-9 -> 7:00-9:00 
+		//Example 2: 7:30-9 -> 7:30-9:00
 			if(!this.left.getKey().equals(":")) {
 				String s = this.left.getKey();
 				boolean isAM = s.toLowerCase().indexOf("am") >=0;
@@ -64,6 +71,7 @@ public class TimeNode{
 		}
 		if(this.key.equals(":")) {
 		//This function also accounts for whether there is AM or PM on the string specifically
+		//Example: Given the string: "7:00am", the code checks if there's an AM/PM in this part of the string "00am" 
 			if(this.right.getKey().toLowerCase().indexOf("am") >=0 ||this.right.getKey().toLowerCase().indexOf("pm") >=0) {
 				if(this.right.getKey().toLowerCase().indexOf("pm") >=0)
 					isAM = false;
@@ -72,6 +80,8 @@ public class TimeNode{
 			}
 		}
 		if(this.key.equals("-")) {
+		//This block of code is only executed right after checking for the colons in the recursive function.
+		//It decides which period is appropriate for the time format that does or does not have a period.
 			String timeBeginMin = this.getLeft().getRight().getKey();
 			String timeEndMin = this.getRight().getRight().getKey();
 			int timeBeginHour = Integer.valueOf(this.getLeft().getLeft().getKey());
